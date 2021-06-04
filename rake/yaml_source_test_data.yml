@@ -1,0 +1,4 @@
+StrVal : "val"
+IntVal : 5
+bool_val_true : true
+bool_val_false : false
