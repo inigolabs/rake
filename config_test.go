@@ -53,6 +53,7 @@ func TestConfigMultiSource(t *testing.T) {
   "IntPrev": 123,
   "IntDefault": 1,
   "IntVal": 5
-}`
+}
+`
 	assert.Equal(t, expectedDebugOutput, actualDebugOutput.String())
 }

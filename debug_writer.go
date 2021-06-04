@@ -21,4 +21,5 @@ func (s *debugWriter) Load(configPtr interface{}) {
 	check(err)
 	_, err = s.writer.Write([]byte(objectString))
 	check(err)
+	io.WriteString(s.writer, "\n")
 }
