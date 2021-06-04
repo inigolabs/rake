@@ -1,6 +1,7 @@
 package rake
 
 import (
+	"bytes"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -22,9 +23,12 @@ func TestConfigMultiSource(t *testing.T) {
 		IntPrev: 123,
 	}
 
+	var actualDebugOutput bytes.Buffer
+
 	LoadSources(&actualCfg,
 		DefaultSource(),
 		YamlFileSource("yaml_source_test_data.yml"),
+		DebugWriter(&actualDebugOutput),
 	)
 
 	expectedCfg := cfg{
@@ -39,4 +43,16 @@ func TestConfigMultiSource(t *testing.T) {
 	}
 
 	assert.Equal(t, expectedCfg, actualCfg)
+
+	expectedDebugOutput := `Config : {
+  "StrEmpty": "",
+  "StrPrev": "prev",
+  "StrDefault": "def",
+  "StrVal": "val",
+  "IntEmpty": 0,
+  "IntPrev": 123,
+  "IntDefault": 1,
+  "IntVal": 5
+}`
+	assert.Equal(t, expectedDebugOutput, actualDebugOutput.String())
 }
