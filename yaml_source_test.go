@@ -42,3 +42,12 @@ func TestYamlSource(t *testing.T) {
 
 	assert.Equal(t, expectedCfg, actualCfg)
 }
+
+func TestYamlSourceMissing(t *testing.T) {
+	type Config struct {
+		A int
+	}
+	cfg := &Config{}
+	source := YamlFileSource("notfound.yml")
+	source.Load(cfg)
+}

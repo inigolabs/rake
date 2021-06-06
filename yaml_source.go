@@ -18,7 +18,10 @@ type yamlSource struct {
 
 func (s *yamlSource) Load(configPtr interface{}) {
 	file, err := os.OpenFile(s.filepath, os.O_RDONLY, os.ModePerm)
-	check(err)
+	if err != nil {
+		// if file not found - do nothing
+		return
+	}
 	defer file.Close()
 
 	decoder := yaml.NewDecoder(file)
