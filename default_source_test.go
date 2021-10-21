@@ -11,6 +11,7 @@ func TestDefaultSource(t *testing.T) {
 		StrEmpty     string
 		StrPrev      string
 		StrVal       string `default:"v"`
+		StrColonVal  string `default:"a:b"`
 		IntEmpty     int
 		IntPrev      int
 		IntVal       int `default:"1"`
@@ -31,6 +32,7 @@ func TestDefaultSource(t *testing.T) {
 		StrEmpty:     "",
 		StrPrev:      "prev",
 		StrVal:       "v",
+		StrColonVal:  "a:b",
 		IntEmpty:     0,
 		IntPrev:      123,
 		IntVal:       1,

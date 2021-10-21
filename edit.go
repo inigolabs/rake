@@ -42,7 +42,7 @@ func iterStruct(elem interface{}, path Path, editFunc EditStructFieldFunc) {
 		if tField.Tag != "" {
 			tagPairs := strings.Split(string(tField.Tag), " ")
 			for _, pair := range tagPairs {
-				tagKeyVal := strings.Split(pair, ":")
+				tagKeyVal := strings.SplitN(pair, ":", 2)
 				key := tagKeyVal[0]
 				val := strings.Trim(tagKeyVal[1], "\"")
 				structTags[key] = val

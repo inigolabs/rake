@@ -2,3 +2,5 @@ githubRepoOwner: ejoffe
 githubRepoName: rake
 requireChecks: false
 requireApproval: false
+githubRemote: origin
+githubBranch: master
