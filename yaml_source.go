@@ -21,7 +21,6 @@ func (s *yamlSource) Load(configPtr interface{}) {
 	file, err := os.OpenFile(s.filepath, os.O_RDONLY, os.ModePerm)
 	if err != nil {
 		// if file not found - do nothing
-		fmt.Printf("rake: config file %s not found\n", s.filepath)
 		return
 	}
 	defer file.Close()
