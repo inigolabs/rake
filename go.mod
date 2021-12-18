@@ -1,4 +1,4 @@
-module github.com/ejoffe/rake
+module github.com/inigolabs/rake
 
 go 1.16
 
