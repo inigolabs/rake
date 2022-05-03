@@ -2,6 +2,7 @@ package rake
 
 import (
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -17,8 +18,9 @@ func TestDefaultSource(t *testing.T) {
 		IntVal       int `default:"1"`
 		BoolEmpty    bool
 		BoolPrev     bool
-		BoolValFalse bool `default:"false"`
-		BoolValTrue  bool `default:"true"`
+		BoolValFalse bool          `default:"false"`
+		BoolValTrue  bool          `default:"true"`
+		Duration     time.Duration `default:"3s"`
 	}
 	actualCfg := cfg{
 		StrPrev:  "prev",
@@ -40,6 +42,7 @@ func TestDefaultSource(t *testing.T) {
 		BoolPrev:     true,
 		BoolValFalse: false,
 		BoolValTrue:  true,
+		Duration:     time.Second * 3,
 	}
 
 	assert.Equal(t, expectedCfg, actualCfg)
