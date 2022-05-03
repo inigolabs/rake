@@ -3,6 +3,7 @@ package rake
 import (
 	"fmt"
 	"strconv"
+	"time"
 )
 
 func DefaultSource() *defaultSource {
@@ -25,6 +26,10 @@ func (s *defaultSource) Load(configPtr interface{}) {
 				boolVal, err := strconv.ParseBool(val)
 				check(err)
 				*a = boolVal
+			case *time.Duration:
+				durationVal, err := time.ParseDuration(val)
+				check(err)
+				*a = durationVal
 			default:
 				panic(fmt.Errorf("unsupported config attr type %T with path %v", attrPtr, path))
 			}
