@@ -11,12 +11,12 @@ func TestIterStruct(t *testing.T) {
 		A int
 		B string
 		C bool
+		E *struct{} `rake:"-"`
 		D struct {
 			DA int
 			DB string
 			DC bool
 		}
-		E *struct{} `rake:"-"`
 	}
 	cfg := Config{}
 
