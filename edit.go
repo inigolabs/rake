@@ -34,6 +34,7 @@ func iterStruct(elem interface{}, path Path, editFunc EditStructFieldFunc) {
 
 		if tField.Tag != "" {
 			tagPairs := strings.Split(string(tField.Tag), " ")
+			var found bool
 			for _, pair := range tagPairs {
 				tagKeyVal := strings.SplitN(pair, ":", 2)
 				key := tagKeyVal[0]
@@ -41,9 +42,12 @@ func iterStruct(elem interface{}, path Path, editFunc EditStructFieldFunc) {
 				switch key {
 				case "yaml", "json", "rake":
 					if val == "-" {
-						return
+						found = true
 					}
 				}
+			}
+			if found {
+				continue
 			}
 		}
 
