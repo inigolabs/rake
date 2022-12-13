@@ -16,6 +16,7 @@ func TestIterStruct(t *testing.T) {
 			DB string
 			DC bool
 		}
+		E *struct{} `rake:"-"`
 	}
 	cfg := Config{}
 

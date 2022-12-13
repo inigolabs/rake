@@ -32,6 +32,21 @@ func iterStruct(elem interface{}, path Path, editFunc EditStructFieldFunc) {
 			continue
 		}
 
+		if tField.Tag != "" {
+			tagPairs := strings.Split(string(tField.Tag), " ")
+			for _, pair := range tagPairs {
+				tagKeyVal := strings.SplitN(pair, ":", 2)
+				key := tagKeyVal[0]
+				val := strings.Trim(tagKeyVal[1], "\"")
+				switch key {
+				case "yaml", "json", "rake":
+					if val == "-" {
+						return
+					}
+				}
+			}
+		}
+
 		if tField.Type.Kind() == reflect.Ptr && tField.Type.Elem().Kind() == reflect.Struct {
 			vField.Set(reflect.New(tField.Type.Elem()))
 			iterStruct(vField.Interface(), currentPath, editFunc)
