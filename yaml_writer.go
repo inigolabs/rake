@@ -19,9 +19,12 @@ func YamlFileWriter(filepath string) *yamlWriter {
 type yamlWriter struct {
 	filepath string
 	output   *bytes.Buffer
+	input    []byte
 }
 
 func (s *yamlWriter) Load(configPtr interface{}) {
+	var current map[string]interface{}
+
 	t := reflect.TypeOf(configPtr)
 	v := reflect.ValueOf(configPtr)
 
@@ -34,12 +37,30 @@ func (s *yamlWriter) Load(configPtr interface{}) {
 		tField := t.Field(i)
 		vField := v.Field(i)
 
-		fieldTags := tField.Tag.Get("writer")
-		if !strings.Contains(fieldTags, "omit") {
-			continue
+		var skip, keep, omit bool
+		for _, v := range strings.Split(tField.Tag.Get("writer"), ",") {
+			switch v {
+			case "readonly", "keep":
+				if current == nil {
+					if s.input == nil {
+						if _, err := os.Stat(s.filepath); os.IsNotExist(err) {
+							omit = true
+							break
+						}
+						LoadSources(&current, YamlFileSource(s.filepath))
+					} else { // for unit tests
+						yaml.Unmarshal(s.input, &current)
+					}
+				}
+				keep = true
+			case "omit":
+				omit = true
+			default:
+				skip = true
+			}
 		}
 
-		if vField.IsZero() || !vField.IsValid() {
+		if skip || vField.IsZero() || !vField.IsValid() {
 			continue
 		}
 
@@ -50,8 +71,30 @@ func (s *yamlWriter) Load(configPtr interface{}) {
 		// Reset to prior value
 		defer vField.Set(dst.Elem())
 
-		// Set empty to empty
-		vField.Set(reflect.Zero(vField.Type()))
+		if keep {
+			var tag string
+			tags := tField.Tag.Get("yaml")
+			if len(tags) == 0 {
+				tag = strings.ToLower(tField.Name)
+			} else if strings.Contains(tags, ",") {
+				tag = strings.SplitN(tags, ",", 2)[0]
+			} else {
+				tag = tags
+			}
+
+			rVal := reflect.ValueOf(current[tag])
+			if rVal.IsValid() {
+				// Set value to current
+				vField.Set(rVal)
+			} else {
+				omit = true
+			}
+		}
+
+		if omit {
+			// Set value to empty
+			vField.Set(reflect.Zero(vField.Type()))
+		}
 	}
 
 	var err error
