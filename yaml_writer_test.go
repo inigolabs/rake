@@ -8,6 +8,34 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+func TestYamlWriterDoubleIndirection(t *testing.T) {
+	type cfg struct {
+		Int        int    `writer:"omit"`
+		Str        string `writer:"omit"`
+		StrCustom  string `yaml:"abc" writer:"omit"`
+		StrCustom2 string `yaml:"cba,omitempty" writer:"omit"`
+		Empty      string `yaml:"Version,omitempty" writer:"omit"`
+	}
+
+	input := &cfg{
+		Int:        1,
+		Str:        "Something",
+		StrCustom:  "Something2",
+		StrCustom2: "Something3",
+	}
+
+	var output bytes.Buffer
+	ymw := &yamlWriter{output: &output}
+	ymw.Load(&input)
+
+	inputIndirect := &input
+	output.Reset()
+	ymw.Load(&inputIndirect)
+
+	output.Reset()
+	ymw.Load(1)
+}
+
 func TestYamlWriterOmit(t *testing.T) {
 	type cfg struct {
 		Int        int    `writer:"omit"`
