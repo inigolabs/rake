@@ -1,6 +1,6 @@
 package rake
 
-import "github.com/caarlos0/env/v6"
+import "github.com/caarlos0/env/v9"
 
 func EnvSource(prefix string) *envSource {
 	return &envSource{
@@ -13,9 +13,9 @@ type envSource struct {
 }
 
 func (s *envSource) Load(configPtr interface{}) {
-	if err := env.Parse(configPtr, env.Options{
+	if err := env.ParseWithOptions(configPtr, env.Options{
 		Prefix: s.prefix + "_",
 	}); err != nil {
-		panic(err)
+		panic(err) //
 	}
 }
